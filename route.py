@@ -14,10 +14,11 @@ js+='&app_code='+appcode
 js+='&waypoint0=geo!41.374151,-73.897709'
 js+='&waypoint1=geo!40.817355,-73.883310'
 js+='&mode=balanced;truck;traffic:enabled;tollroad:0'
-js+='&alternatives=3'
+js+='&alternatives=0'
 js+='&metricSystem=imperial'
 js+='&resolution=0:10'
 js+='&instructionFormat=text'
+js+='&VehicleType=diesel,5.5'
 rs=pd.DataFrame(requests.get(js).json())
 
 
