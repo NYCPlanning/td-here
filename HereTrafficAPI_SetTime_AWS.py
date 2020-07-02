@@ -23,26 +23,19 @@ from threading import Timer
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
-path='/home/mayijun/HERE/'
+path='/home/mayijun/Desktop/HERE/'
 
 
 for i in range(0,1000):
     centerLatLong = "40.712651,-74.006051"
     apiKey = "h98-CibKYa59kR0XZODDB9muLpx2CAc_44w0Ym9IO0U&&responseattributes=sh"
     meters = "30000"
-    url = "https://traffic.ls.hereapi.com/traffic/6.2/flow.xml?prox="+ centerLatLong+ "," +meters +"&apiKey=" + apiKey
-    page = requests.get(url)
-    soup = BeautifulSoup(page.text, "lxml")
-    body = soup.find('body')
-    orgtimestamps = fromstring(str(body))[0].attrib["created_timestamp"]
-    from_zone = tz.tzutc()
-    to_zone = tz.tzlocal()
-    temptimestamps = datetime.strptime(orgtimestamps, '%Y-%m-%dT%H:%M:%SZ')
-    temptimestamps = temptimestamps.replace(tzinfo=from_zone)
-    temptimestamps = temptimestamps.astimezone(to_zone)
-    timestamps = temptimestamps.strftime("%m%d%H%M%S")
+    url = "https://traffic.ls.hereapi.com/traffic/6.2/flow.json?prox="+ centerLatLong+ "," +meters +"&apiKey=" + apiKey
+    page = requests.get(url).json()
+    orgtimestamps = page.get('CREATED_TIMESTAMP')
+    timestamps=orgtimestamps[5:7]+orgtimestamps[8:10]+orgtimestamps[0:4]+str(pd.to_numeric(orgtimestamps[11:13])-4)+orgtimestamps[14:16]+orgtimestamps[17:19]
     print("timestamps:",timestamps)
-    roads = soup.find_all('rw')
+    roads=page.get('RWS')[0].get('RW')
     suList=[]
     ffList=[]
     roadList = []
@@ -53,35 +46,27 @@ for i in range(0,1000):
     spList = []
     liList = []
     for road in roads:
-        roadxml = fromstring(str(road))
-        description = roadxml.attrib["de"]
-        li = roadxml.attrib["li"]
+        description=road.get('DE')
+        li=road.get('LI')
         if description is np.nan:
             description = "NA"
-        fis = road.find_all('fi')
+        fis = road.get('FIS')[0].get('FI')
         fisLen = len(fis)
         for fi in fis:
-            myxml = fromstring(str(fi))
-            flowItem = myxml[0].attrib["de"]
-            pointCode = myxml[0].attrib["pc"]
-            for child in myxml:
-                if('cn' in child.attrib):
-                    cn=float(child.attrib['cn'])
-                if('su' in child.attrib):
-                    su=float(child.attrib['su'])
-                if('ff' in child.attrib):
-                    ff=float(child.attrib['ff'])
-                if('jf' in child.attrib):
-                    jf=float(child.attrib['jf'])
-                if('sp' in child.attrib):
-                    sp=float(child.attrib['sp'])
-            suList.append(float(su))
-            ffList.append(float(ff))
+            flowItem = fi.get('TMC').get('DE')
+            pointCode = fi.get('TMC').get('PC')
+            cn=pd.to_numeric(fi.get('CF')[0].get('CN'))
+            su=pd.to_numeric(fi.get('CF')[0].get('SU'))
+            ff=pd.to_numeric(fi.get('CF')[0].get('FF'))
+            jf=pd.to_numeric(fi.get('CF')[0].get('JF'))
+            sp=pd.to_numeric(fi.get('CF')[0].get('SP'))
             fiList.append(flowItem)
             pcList.append(pointCode)
             cnList.append(cn)
+            suList.append(su)
+            ffList.append(ff)            
             jfList.append(jf)
-            spList.append(float(sp))
+            spList.append(sp)
         roadList.extend(([description] * fisLen))
         liList.extend(([li] * fisLen))
     shpdf = pd.DataFrame({'Roadway': roadList,'FlowItem':fiList, 'Li': liList, 'PointCode':pcList,'Confidence':cnList,'FreeFlow':ffList, 'JamFactor':jfList,'SpCapped':spList,'SpeedNotCap':suList})
