@@ -23,7 +23,7 @@ from threading import Timer
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
-path='/home/mayijun/Desktop/HERE/'
+path='/home/mayijun/HERE/'
 
 
 for i in range(0,1000):
