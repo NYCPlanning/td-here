@@ -39,6 +39,7 @@ hrs = 15
 mins = 0
 minInt = 60
 #x=datetime.today()
+path='/home/mayijun/HERE/'
 
 def Longfunc():
     now = datetime.now()
@@ -49,7 +50,6 @@ def Longfunc():
     print("now:",now)
     # define file path and read raw data
 #    path='/Users/rl/OneDrive - NYC O365 HOSTED/Desktop/subway ridership/Here Traffic Data/Here Traffic Data/'
-    path='/home/mayijun/HERE/'
     #masterdf = pd.read_csv(path + "MasterData.csv", header= 0, index_col=False, encoding='latin_1')
     # masterdf = pd.read_csv(path + "Handlebar Master 20191204.csv", header= 0, index_col=False, nrows =3003, encoding='latin_1')
     
