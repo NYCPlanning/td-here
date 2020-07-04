@@ -34,8 +34,8 @@ for i in range(0,1000):
     url = "https://traffic.ls.hereapi.com/traffic/6.2/flow.json?prox="+ centerLatLong+ "," +meters +"&apiKey=" + apiKey
     page = requests.get(url).json()
     orgtimestamps = page.get('CREATED_TIMESTAMP')
-    timestamps=datetime.datetime.strptime(orgtimestamps.split('.')[0],'%Y-%m-%dT%H:%M:%S')
-    timestamps=timestamps-datetime.timedelta(hours=4)
+    timestamps=datetime.strptime(orgtimestamps.split('.')[0],'%Y-%m-%dT%H:%M:%S')
+    timestamps=timestamps-timedelta(hours=4)
     timestamps=timestamps.strftime('%Y%m%d%H%M%S')
     print("timestamps:",timestamps)
     roads=page.get('RWS')[0].get('RW')
