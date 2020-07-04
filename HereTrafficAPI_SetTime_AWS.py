@@ -11,6 +11,7 @@ import geopandas as gpd
 import numpy as np
 import os
 import time
+import datetime
 import json
 from xml.etree.ElementTree import XML, fromstring, tostring
 from matplotlib import pyplot as plt
@@ -33,7 +34,9 @@ for i in range(0,1000):
     url = "https://traffic.ls.hereapi.com/traffic/6.2/flow.json?prox="+ centerLatLong+ "," +meters +"&apiKey=" + apiKey
     page = requests.get(url).json()
     orgtimestamps = page.get('CREATED_TIMESTAMP')
-    timestamps=orgtimestamps[5:7]+orgtimestamps[8:10]+orgtimestamps[0:4]+str(pd.to_numeric(orgtimestamps[11:13])-4)+orgtimestamps[14:16]+orgtimestamps[17:19]
+    timestamps=datetime.datetime.strptime(orgtimestamps.split('.')[0],'%Y-%m-%dT%H:%M:%S')
+    timestamps=timestamps-datetime.timedelta(hours=4)
+    timestamps=timestamps.strftime('%Y%m%d%H%M%S')
     print("timestamps:",timestamps)
     roads=page.get('RWS')[0].get('RW')
     suList=[]
