@@ -36,7 +36,7 @@ for i in range(0,1000):
     orgtimestamps = page.get('CREATED_TIMESTAMP')
     timestamps=datetime.strptime(orgtimestamps.split('.')[0],'%Y-%m-%dT%H:%M:%S')
     timestamps=timestamps-timedelta(hours=4)
-    timestamps=timestamps.strftime('%Y%m%d%H%M%S')
+    timestamps=timestamps.strftime('%m%d%H%M%S')
     print("timestamps:",timestamps)
     roads=page.get('RWS')[0].get('RW')
     suList=[]
