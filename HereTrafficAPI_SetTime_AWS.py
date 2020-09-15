@@ -1,24 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import re
 import requests
-import xlrd
-from bs4 import BeautifulSoup
 import pandas as pd
-import decimal
-import geopandas as gpd
 import numpy as np
-import os
 import time
 import datetime
-import json
-from xml.etree.ElementTree import XML, fromstring, tostring
-from matplotlib import pyplot as plt
-from shapely.geometry import Point, LineString, shape
-from dateutil import tz
 from datetime import datetime, timedelta
-from threading import Timer
 
 
 
